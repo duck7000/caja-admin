@@ -1,4 +1,4 @@
-# Caja Admin - Extension for Caja to do administrative operations
+# Caja Admin - Extension for Caja to do root operations
 # Copyright (C) 2015-2016 Bruno Nova <brunomb.nova@gmail.com>
 #               2016 frmdstryr <frmdstryr@gmail.com>
 #
@@ -27,8 +27,8 @@ TERMINAL_PATH="@TERMINAL_PATH@"
 gettext.install('caja-admin')
 
 class CajaAdmin(Caja.MenuProvider, GObject.GObject):
-	"""Simple Caja extension that adds some administrative (root) actions to
-	the right-click menu, using 'pkexec' to authenticate the administrator."""
+	"""Simple Caja extension that adds some root actions to
+	the right-click menu, using 'pkexec' to authenticate the root."""
 	def __init__(self):
 		pass
 
@@ -72,25 +72,25 @@ class CajaAdmin(Caja.MenuProvider, GObject.GObject):
 		return items
 
 	def _create_caja_item(self, file):
-		"""Creates the 'Open as Administrator' menu item."""
+		"""Creates the 'Open as Root' menu item."""
 		item = Caja.MenuItem(name="CajaAdmin::Caja",
-		                     label=_("Open as A_dministrator"),
+		                     label=_("Open as R_oot"),
 		                     tip=_("Open this folder with root privileges"))
 		item.connect("activate", self._caja_run, file)
 		return item
 
 	def _create_exec_item(self, file):
-		"""Creates the 'Run as Administrator' menu item."""
+		"""Creates the 'Run as Root' menu item."""
 		item = Caja.MenuItem(name="CajaAdmin::ExecAdmin",
-		                     label=_("Run as A_dministrator"),
+		                     label=_("Run as R_oot"),
 		                     tip=_("Run this file with root privileges"))
 		item.connect("activate", self._exec_run, file)
 		return item
 
 	def _create_gedit_item(self, file):
-		"""Creates the 'Edit as Administrator' menu item."""
+		"""Creates the 'Edit as Root' menu item."""
 		item = Caja.MenuItem(name="CajaAdmin::Gedit",
-		                     label=_("Edit as A_dministrator"),
+		                     label=_("Edit as R_oot"),
 		                     tip=_("Open this file in the text editor with root privileges"))
 		item.connect("activate", self._gedit_run, file)
 		return item
@@ -109,12 +109,12 @@ class CajaAdmin(Caja.MenuProvider, GObject.GObject):
 			                           Gtk.ButtonsType.OK_CANCEL,
 			                           _("CAUTION!"))
 			msg = _("Running the File Manager, the Text Editor or an executable with "
-			        "Administrator privileges <b>is dangerous</b>! "
+			        "Root privileges <b>is dangerous</b>! "
 			        "<b>You can easily destroy your system if you are not careful!</b>\n"
 			        "<b>Think twice</b> before doing so, especially before running "
 			        "untrusted executables downloaded from the Internet. "
 			        "<b>They can contain malware</b>, which can do <b>irreversible "
-			        "damage to your system</b> when given Administrator privileges!\n"
+			        "damage to your system</b> when given Root privileges!\n"
 			        "Proceed only if you know what you are doing and understand the risks.")
 			dialog.format_secondary_markup(msg)
 			response = dialog.run()
@@ -134,7 +134,7 @@ class CajaAdmin(Caja.MenuProvider, GObject.GObject):
 
 
 	def _caja_run(self, menu, file):
-		"""'Open as Administrator' menu item callback."""
+		"""'Open as Root' menu item callback."""
 		if self._show_warning_dialog():
 			uri = file.get_uri()
 			subprocess.Popen([PKEXEC_PATH, CAJA_PATH, "--no-desktop", uri])
@@ -148,7 +148,7 @@ class CajaAdmin(Caja.MenuProvider, GObject.GObject):
 			return False
 
 	def _exec_run(self, menu, file, gui=True):
-		"""'Run as Administrator' menu item callback."""
+		"""'Run as Root' menu item callback."""
 		if self._show_warning_dialog():
 			try:
 				path = file.get_location().get_path()
@@ -164,7 +164,7 @@ class CajaAdmin(Caja.MenuProvider, GObject.GObject):
 				traceback.print_exc()
 
 	def _gedit_run(self, menu, file):
-		"""'Edit as Administrator' menu item callback."""
+		"""'Edit as Root' menu item callback."""
 		if self._show_warning_dialog():
 			uri = file.get_uri()
 			subprocess.Popen([PKEXEC_PATH, PLUMA_PATH, uri])
